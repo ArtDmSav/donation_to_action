@@ -13,11 +13,11 @@ alert_token = 'jnsvnskkjnsdsf'
 tg_bot_token = '718385733:AAsjnvssv-dfijvnnosfnvsfn'
 
 
-# Инициализация асинхронного клиента Socket.IO
+# Initializing an asynchronous client Socket.IO
 sio = socketio.AsyncClient(reconnection=True, reconnection_delay=5)
 api_url = 'https://api.telegram.org'
 
-# Инициализация Telegram клиента (глобально)
+# Initializing the Telegram client (глобально)
 telegram_client = TelegramClient(user_name, api_id, api_hash)
 
 # Обработчик события подключения к WebSocket
@@ -26,7 +26,7 @@ async def connect():
     print('Бот запущен')
     await sio.emit('add-user', {'token': alert_token, "type": "alert_widget"})
 
-# Обработчик события donation
+# Event handler donation
 @sio.event
 async def donation(data):
     event = json.loads(data)
@@ -39,20 +39,20 @@ async def donation(data):
         await session.get(f'{api_url}/bot{tg_bot_token}/sendMessage', params=payload)
     await send_telegram_message()
 
-# Функция для отправки сообщения в Telegram
+# Function for sending a message in Telegram
 async def send_telegram_message():
     await telegram_client.send_message('ifttt', 'Donate')
 
-# Основная функция, запускающая всё приложение
+# The main function that runs the entire application
 async def main():
     await telegram_client.start()
     await sio.connect('wss://socket.donationalerts.ru:443', transports='websocket')
 
-    # Ожидание 59.5 минут перед остановкой программы
-    await asyncio.sleep(3570)  # 59.5 минут * 60 секунд = 3570 секунд
+    # Necessary for my task (optional). Waiting 59.5 minutes before stopping the program
+    await asyncio.sleep(3570)  # 59.5 minutes * 60 seconds = 3570 seconds
     await sio.disconnect()
     await telegram_client.disconnect()
 
-# Запуск приложения
+# Launch the application
 if __name__ == "__main__":
     asyncio.run(main())
