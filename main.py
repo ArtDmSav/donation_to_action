@@ -20,7 +20,7 @@ api_url = 'https://api.telegram.org'
 # Initializing the Telegram client (глобально)
 telegram_client = TelegramClient(user_name, api_id, api_hash)
 
-# Обработчик события подключения к WebSocket
+# WebSocket connection event handler
 @sio.event
 async def connect():
     print('Бот запущен')
